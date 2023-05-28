@@ -5,7 +5,8 @@ Incentivizing Redelegations for Greater Network Decentralization and Security
 
 This project takes on the critical challenge of deteriorating decentralization within Delegated Proof of Stake (DPoS) and similar blockchains in which disapproprotionate amounts of power can be gained by a select few. We have been observing an alarming accumulation of power at an accelerated rate on most Cosmos chains - while not necessarily malicious, a network should have tools at disposal to protect its decentralized nature. With compounding rewards, the disparity only continues to grow.
 
-![redelegationrewards](https://github.com/LPX55/IncentivizedDelegations/assets/16395727/e17f41dd-9bb3-48c9-801a-2609b7d3ad80)
+![https-dora-jp-ngrok-io (1)](https://github.com/LPX55/IncentivizedDelegations/assets/16395727/c21b121a-1e88-4094-b804-4a3afdb526c0)
+
 
 This project is a novel proof of concept that seeks to reverse this trend by incentivizing users to re-delegate from top-tier validators to mid-tier and lower-tier validators. This re-distribution of power is not only healthy for the network but is also beneficial and encouraging for the validators in the lower tiers to continue to validate the network and contribute.
 
