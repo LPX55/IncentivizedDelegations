@@ -13,7 +13,7 @@ This project takes on the critical challenge of deteriorating decentralization w
 
 This project is a novel proof of concept that seeks to reverse this trend by incentivizing users to re-delegate from top-tier validators to mid-tier and lower-tier validators. This re-distribution of power is not only healthy for the network but is also beneficial and encouraging for the validators in the lower tiers to continue to validate the network and contribute.
 
-At the heart of our project is a smart contract that amalgamates the effective principles of time-vested reward contracts, popular within Ethereum DeFi, and the forthcoming staking mechanism known as "EVM Extension," currently in the Evmos testnet. The smart contract operates by maintaining a pool of tokens which are distributed as rewards to users in accordance with the size and duration of their re-delegations.
+At the heart of our project is a smart contract that amalgamates the effective principles of time-vested reward contracts, popular within Ethereum DeFi, and the forthcoming "EVM Extensions" currently live on Evmos testnet. The smart contract operates by maintaining a pool of tokens which are distributed as rewards to users in accordance with the size and duration of their re-delegations.
 
 For management of contract features such as period lengths and reward amounts, the contract is designed to ideally be owned by a multisig wallet like Gnosis Safe. This PoC may one day serve a real purpose in the Evmos governance initiatives. 
 
