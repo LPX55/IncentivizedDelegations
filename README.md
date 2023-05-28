@@ -1,5 +1,8 @@
 # IncentivizedDelegations
+
 Incentivizing Redelegations for Greater Network Decentralization and Security
+
+**Deployment (9000)** - `0x9A8c92273dC58f7F6Ebb20Aadac94D1bCd5784b4`
 
 ## Project Summary
 
