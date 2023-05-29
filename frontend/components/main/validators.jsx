@@ -192,9 +192,9 @@ const ValidatorsTable = () => {
     ) : (
       <></>
     )}
-    <div className="mt-4 flex flex-row gap-4 ">
-      { !isApproved && address ? (
-    <btn className="focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 focus:outline-none absolute z-0 top-48 py-2 px-7 bg-gray-800 text-white rounded text-base hover:bg-black"
+    <div className="mt-4 flex gap-4 ">
+      { !isApproved && address && !isConnecting ? (
+    <btn className="focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 focus:outline-none relative z-0 py-2 px-7 bg-gray-800 text-white rounded text-base hover:cursor-pointer hover:bg-black"
     disabled={!write} onClick={() => write?.()}><strong className="font-medium">Approve Contract</strong></btn>
       ) : ( 
     <btn onClick={handleSubmit} type="button" className="group font-medium tracking-wide select-none text-base relative inline-flex items-center justify-center cursor-pointer h-12 border-2 border-solid py-0 px-6 rounded-md overflow-hidden z-10 transition-all duration-300 ease-in-out outline-0 bg-[#ed4e33] text-white border-[#e7583e] hover:text-[#dddddd] focus:text-[#ed4e33]">Review Redelegations</btn>
