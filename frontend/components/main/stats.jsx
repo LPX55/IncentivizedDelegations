@@ -7,7 +7,6 @@ const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
 export const HeaderStats = () => {
 
-
 const [contractStats, setContractStats] = useState({ poolVal: '', totalLocked: '', finishTime: '' });
 
 const { data, isError, isLoading } = useContractReads({
@@ -32,18 +31,19 @@ const { data, isError, isLoading } = useContractReads({
   cacheTime: 30_000,
   onSettled(data) {
     console.log('Settled', data)
+
     const poolValue = ethers.BigNumber.from(data[0]);
     const totalSupply = ethers.BigNumber.from(data[1]);
     const endTime = ethers.FixedNumber.from(data[2]);
 
     const poolValueFmt = ethers.utils.formatEther(poolValue);
     const totalSupplyFmt = ethers.utils.formatEther(totalSupply);
-    const endTimeFmt = ethers.utils.formatEther(endTime);
-
+    const endTimeFmt = ethers.utils.formatEther(endTime) * 1000;
+    const humanTime = new Intl.DateTimeFormat('en-US', { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(endTimeFmt)
     setContractStats({
       poolVal: poolValueFmt,
       totalLocked: totalSupplyFmt,
-      finishTime: endTimeFmt
+      finishTime: humanTime
     });
 
 
@@ -58,7 +58,7 @@ return(
           <dt className="order-last text-lg font-medium text-gray-200" >
             Current Round Pool
           </dt>
-          <dd className="text-3xl font-medium text-[#ed4e33] md:text-2xl">
+          <dd className="text-3xl font-medium text-[#ed4e33] md:text-xl">
             {Number(contractStats.poolVal).toFixed(2)} EVMOS
           </dd>
         </div>
@@ -69,11 +69,11 @@ return(
           <dt
             className="order-last text-lg font-medium text-gray-200"
           >
-            Round-End Epoch Time
+            Next Round Begins
           </dt>
 
-          <dd className="text-3xl font-medium text-[#ed4e33] md:text-2xl">
-          {Number(contractStats.finishTime)}
+          <dd className="text-2xl font-medium text-[#ed4e33] md:text-xl">
+          {(contractStats.finishTime)}
           </dd>
         </div>
 
@@ -86,7 +86,7 @@ return(
             Total Redelegated
           </dt>
 
-          <dd className="text-3xl font-medium text-[#ed4e33] md:text-2xl">
+          <dd className="text-3xl font-medium text-[#ed4e33] md:text-xl">
           {Number(contractStats.totalLocked).toFixed(2)} EVMOS
           </dd>
         </div>
