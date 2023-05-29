@@ -54,7 +54,7 @@ return(
     
     <div className="mb-8">
       <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="flex flex-col rounded-lg bg-zinc-700 px-4 py-8 text-center dark:bg-blue-700">
+        <div className="flex flex-col rounded-lg bg-zinc-700 px-4 py-8 text-center ">
           <dt className="order-last text-lg font-medium text-gray-200" >
             Current Round Pool
           </dt>
@@ -64,7 +64,7 @@ return(
         </div>
 
         <div
-          className="flex flex-col rounded-lg bg-zinc-700 px-4 py-8 text-center dark:bg-blue-700"
+          className="flex flex-col rounded-lg bg-zinc-700 px-4 py-8 text-center "
         >
           <dt
             className="order-last text-lg font-medium text-gray-200"
@@ -78,7 +78,7 @@ return(
         </div>
 
         <div
-          className="flex flex-col rounded-lg bg-zinc-700 px-4 py-8 text-center dark:bg-blue-700"
+          className="flex flex-col rounded-lg bg-zinc-700 px-4 py-8 text-center "
         >
           <dt
             className="order-last text-lg font-medium text-gray-200"

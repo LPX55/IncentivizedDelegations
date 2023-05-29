@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAccount, useContractReads, useContractWrite  } from "wagmi";
 import { ethToEvmos } from "@evmos/address-converter";
 import { HeaderStats } from "./stats";
+import { toast } from "react-toastify";
+
 import Router, { useRouter } from "next/router";
 
 import { ethers, BigNumber } from "ethers"
@@ -100,7 +102,12 @@ const ValidatorsTable = () => {
       default: return '';
     }
   };
+  const throwError = () => toast('Error - Make sure you are connected to Evmos testnet and the selected delegations are not in a redelegation state already.', { hideProgressBar: true, autoClose: 3000, type: 'error' })
   const handleSubmit = (event) => {
+    if(!address){
+      throwError();
+      return
+    }
     event.preventDefault();
     localStorage.setItem('srcVal', JSON.stringify(checkedDelegations));
     localStorage.setItem('dstVal', JSON.stringify(checkedDelegationsTo));
@@ -180,8 +187,13 @@ const ValidatorsTable = () => {
         })}
       </tbody>
     </table>
+    { isDisconnected ? (
+      <h1 className="my-8 font-bold text-3xl">Connect to Evmos Testnet</h1>
+    ) : (
+      <></>
+    )}
     <div className="mt-4 flex flex-row gap-4 ">
-      { !isApproved ? (
+      { !isApproved && address ? (
     <btn className="focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 focus:outline-none absolute z-0 top-48 py-2 px-7 bg-gray-800 text-white rounded text-base hover:bg-black"
     disabled={!write} onClick={() => write?.()}><strong className="font-medium">Approve Contract</strong></btn>
       ) : ( 
