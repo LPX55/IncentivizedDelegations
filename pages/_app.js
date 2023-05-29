@@ -1,7 +1,8 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
-
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { getDefaultWallets, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, useAccount, WagmiConfig } from "wagmi";
 import {
 	evmosTestnet
@@ -43,11 +44,15 @@ function MyApp({ Component, pageProps }) {
 		<WagmiConfig client={wagmiClient}>
 			<RainbowKitProvider
 				modalSize="compact"
+				theme={darkTheme({
+					accentColor: '#e44a32'
+					   })}
 				initialChain={process.env.NEXT_PUBLIC_DEFAULT_CHAIN}
 				chains={chains}
 			>
 				<MainLayout>
 					<Component {...pageProps} />
+					<ToastContainer />
 				</MainLayout>
 			</RainbowKitProvider>
 		</WagmiConfig>
