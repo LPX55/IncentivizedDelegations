@@ -11,9 +11,10 @@ import redelegateAbi from '../../abi/redelegate.json';
 
 const ValidatorsTable = () => {
   const router = useRouter();
+  const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
   const { isSuccess, write } = useContractWrite({
-    address: '0x7c6c8ac3e1E838034761B90886D8004e79441780',
+    address: CONTRACT_ADDRESS,
     abi: redelegateAbi,
     functionName: 'approveRequiredMethods',
   })
