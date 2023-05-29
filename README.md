@@ -34,6 +34,7 @@ Added Functions:
 
 ## To-Do
 
+- Add rewards status and claiming page
 - Add logic to check that the destination validator is indeed in a lower ranking
 - Add logic to allow users to re-delegate only a portion of existing delegations
 - Add logic for re-delegation distribution weights (currently divided evenly)
