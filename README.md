@@ -19,3 +19,24 @@ For management of contract features such as period lengths and reward amounts, t
 
 The project represents a practical and viable approach to address the pressing issue of growing centralization in PoS and DPoS blockchains. Through incentivized re-delegation, we aim to uphold the original spirit of blockchain: decentralization.
 
+## Contracts Overview
+
+**Warning:** Unaudited contract not meant for production use nor written with security in mind.
+
+Full view of contract and documentation of contract [available here.](https://github.com/LPX55/IncentivizedDelegations/tree/main/contracts)
+
+### SimlpeStaking.sol Improvements
+
+Added Functions:
+
+- `redelegateTokensMultiple`: proof of concept to show capability of expanding provided example functions to accept arrays
+- `isUserApproved`: added mapping to keep track of users that have already approved the contract
+
+## To-Do
+
+- Add logic to check that the destination validator is indeed in a lower ranking
+- Add logic to allow users to re-delegate only a portion of existing delegations
+- Add logic for re-delegation distribution weights (currently divided evenly)
+- UI: Show existing ongoing re-delegations and time remaining
+- UI: Improve TX status reports
+- UI: Improve redelegation screen and visual cues
