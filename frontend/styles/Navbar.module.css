@@ -6,16 +6,10 @@
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	max-width: 56rem;
+	max-width: 72rem;
 	padding: 2rem 0rem 0.8rem;
 	gap: 2rem;
 	margin: auto;
 	margin-bottom: 2rem;
 
-}
-
-
-.alchemy_logo{
-	width: 6rem;
-	cursor: pointer;
 }

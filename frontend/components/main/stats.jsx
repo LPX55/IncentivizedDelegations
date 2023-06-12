@@ -59,7 +59,7 @@ return(
             Current Round Pool
           </dt>
           <dd className="text-3xl font-medium text-[#ed4e33] md:text-xl">
-            {Number(contractStats.poolVal).toFixed(2)} EVMOS
+            {Number(contractStats.poolVal).toFixed(2)} tEVMOS
           </dd>
         </div>
 
@@ -87,7 +87,7 @@ return(
           </dt>
 
           <dd className="text-3xl font-medium text-[#ed4e33] md:text-xl">
-          {Number(contractStats.totalLocked).toFixed(2)} EVMOS
+          {Number(contractStats.totalLocked).toFixed(2)} tEVMOS
           </dd>
         </div>
       </dl>

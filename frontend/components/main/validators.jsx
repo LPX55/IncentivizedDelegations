@@ -3,6 +3,7 @@ import { useAccount, useContractReads, useContractWrite  } from "wagmi";
 import { ethToEvmos } from "@evmos/address-converter";
 import { HeaderStats } from "./stats";
 import { toast } from "react-toastify";
+import { Table } from "flowbite-react";
 
 import Router, { useRouter } from "next/router";
 
@@ -24,6 +25,8 @@ const ValidatorsTable = () => {
   const { address, isConnecting, isDisconnected } = useAccount();
   const [evmosAccount, setEvmosAccount] = useState('');
   const [delegations, setDelegations] = useState({});
+  const [redelegations, setRedelegations] = useState({});
+
   const [checkedDelegations, setCheckedDelegations] = useState({});
   const [checkedDelegationsTo, setCheckedDelegationsTo] = useState({});
   const [isApproved, setIsApproved] = useState(false);
@@ -45,9 +48,7 @@ const ValidatorsTable = () => {
       }
     },
   });
-  console.log(checkedDelegations);
-  console.log(checkedDelegationsTo);
-  console.log(isApproved)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,20 +72,25 @@ const ValidatorsTable = () => {
         const delegationsUrl = `https://rest.bd.evmos.dev:1317/cosmos/staking/v1beta1/delegations/${evmosAddr}`;
         const delegationsResponse = await fetch(delegationsUrl);
         const delegationsData = await delegationsResponse.json();
-
         const delegations = {};
-
         if (delegationsData && Array.isArray(delegationsData.delegation_responses)) {
-
-        delegationsData.delegation_responses.forEach(response => {
-
-        delegations[response.delegation.validator_address] = response.balance.amount;
-          
+          delegationsData.delegation_responses.forEach(response => {
+          delegations[response.delegation.validator_address] = response.balance.amount;
         });
-      }
-      
-      console.log();
+        }
+        const redelegationsUrl = `https://rest.bd.evmos.dev:1317/cosmos/staking/v1beta1/delegators/${evmosAddr}/redelegations`
+        const redelegationsResponse = await fetch(redelegationsUrl);
+        const redelegationsData = await redelegationsResponse.json();
+        const redelegations = {};
+        if (redelegationsData && Array.isArray(redelegationsData.redelegation_responses)) {
+          redelegationsData.redelegation_responses.forEach(response => {
+            redelegations[response.redelegation.validator_dst_address] = response.entries;
+          });
+        }
         setDelegations(delegations);
+        setRedelegations(redelegations)
+        console.log(redelegations);
+
       } catch (error) {
         console.error(error);
       }
@@ -119,75 +125,71 @@ const ValidatorsTable = () => {
   <div className="w-full mx-auto py-2">
    <HeaderStats />
   </div>
-    <table className="table-auto min-w-xl w-full rounded-xl relative border-zinc-800">
-      <thead className="sticky inset-y-0 start-0 bg-black">
-        <tr>
-        <th className="px-2 py-2">#</th>
-        <th className="px-3 py-2 text-left w-[33%]">Validator</th>
-        <th className="px-2 py-2">Voting Power</th>
-        <th className="px-3 py-2 text-left">Delegation</th>
-        <th></th>
-        <th className="px-2 py-2">🔁</th>
 
-        </tr>
-      </thead>
-      <tbody className="rounded-xl">
-        {validators.map((validator, index) => {
-          const percentage = ((parseFloat(validator.delegator_shares) / totalShares) * 100).toFixed(2);
-          const delegatedAmount = delegations[validator.operator_address] ? delegations[validator.operator_address].toString() * (10 ** -18) : '0';
+    <Table className="table-auto min-w-xl w-full rounded-xl relative border-zinc-800">
+    <Table.Head className="sticky inset-y-0 start-0 bg-black">
+        <Table.HeadCell className="px-2 py-2">#</Table.HeadCell>
+        <Table.HeadCell className="px-3 py-2 text-left">Validator</Table.HeadCell>
+        <Table.HeadCell className="px-2 py-2">Voting Power</Table.HeadCell>
+        <Table.HeadCell className="px-3 py-2 text-left">Delegation</Table.HeadCell>
+        <Table.HeadCell>U</Table.HeadCell>
+        <Table.HeadCell className="px-2 py-2">🔁</Table.HeadCell>
+    </Table.Head>
+    <Table.Body className="rounded-xl divide-y">
+      {validators.map((validator, index) => {
+        const percentage = ((parseFloat(validator.delegator_shares) / totalShares) * 100).toFixed(2);
+        const delegatedAmount = delegations[validator.operator_address] ? delegations[validator.operator_address].toString() * (10 ** -18) : '0';
 
-          return (
-            <tr key={index} rank={index} addr={validator.operator_address} className="border border-zinc-800">
-                            <td className={`  py-4 text-center text-gray-900 ${getRowColor(index, validators.length)}`}>
-                {index + 1}
-              </td>
+        return (
+          <Table.Row key={index} rank={index} addr={validator.operator_address} className="border border-zinc-800 bg-gray-800">
+            <Table.Cell className={`py-4 text-center text-gray-900 ${getRowColor(index, validators.length)} whitespace-nowrap font-medium text-white`}>
+              {index + 1}
+            </Table.Cell>
 
-              <td className="px-4 py-4">{validator.description.moniker}</td>
-              <td className="text-center px-2 py-4">{percentage}%</td>
-              <td className={`px-4 py-4`}>
+            <Table.Cell className="px-4 py-4 whitespace-nowrap font-medium text-white">{validator.description.moniker}</Table.Cell>
+            <Table.Cell className="text-center px-2 py-4 whitespace-nowrap font-medium text-white">{percentage}%</Table.Cell>
+            <Table.Cell className={`px-4 py-4 whitespace-nowrap font-medium text-white`}>
               <span className={`${checkedDelegations[validator.operator_address] ? 'line-through' : ''}`}>
-                {Number(delegatedAmount).toFixed(2)}</span>
-                {checkedDelegations[validator.operator_address] && ' ➡ 0'}
-
-                </td>
-              <td className="px-2 py-4 self-center text-center"></td>
-
-              <td className="px-2 py-4 self-center text-center"><div className="flex flex-col items-center justify-center">
-              {delegations[validator.operator_address] && delegations[validator.operator_address] > 0 ? (
+                {Number(delegatedAmount).toFixed(2)}
+              </span>
+              {checkedDelegations[validator.operator_address] && ' ➡ 0'}
+            </Table.Cell>
+            <Table.Cell className="px-2 py-4 self-center text-center">U</Table.Cell>
+            
+            <Table.Cell className="px-2 py-4 self-center text-center whitespace-nowrap font-medium text-white">
+            {delegations[validator.operator_address] && delegations[validator.operator_address] > 0 ? (
                 <>
-  <input type="checkbox" className="scale-x-[-1] appearance-none w-7 focus:outline-none before:checked:bg-red-500 h-4 bg-gray-200 rounded-full before:inline-block before:rounded-full before:bg-green-500 before:h-3 before:w-3 before:-translate-y-[3px] checked:before:translate-x-full shadow-inner transition-all duration-300 before:ml-0.5" 
-  checked={!!checkedDelegations[validator.operator_address]}
-   
-  onChange={(e) => {
-    setCheckedDelegations(prev => ({
-      ...prev,
-      [validator.operator_address]: e.target.checked ? delegations[validator.operator_address] : null
-    }));
-  }} />
-  <p className="block text-xs mt-1.5">Redelegate From</p></>
-): (
-  <>
-  <input className="h-4 w-4 rounded border-gray-300" 
-  type="checkbox" id="Row1" 
-  onChange={(e) => {
-    setCheckedDelegationsTo(prev => ({
-      ...prev,
-      [validator.operator_address]: e.target.checked ? index : null
-    }));
-  }}
-  />
-  <p className="block text-xs mt-1.5">Redelegate To</p>
-  </>
-)
-} 
-
-            </div></td>
-
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+            <input type="checkbox" className="scale-x-[-1] appearance-none w-7 focus:outline-none before:checked:bg-red-500 h-4 bg-gray-200 rounded-full before:inline-block before:rounded-full before:bg-green-500 before:h-3 before:w-3 before:-translate-y-[3px] checked:before:translate-x-full shadow-inner transition-all duration-300 before:ml-0.5" 
+            checked={!!checkedDelegations[validator.operator_address]}
+            
+            onChange={(e) => {
+              setCheckedDelegations(prev => ({
+                ...prev,
+                [validator.operator_address]: e.target.checked ? delegations[validator.operator_address] : null
+              }));
+            }} />
+            <p className="block text-xs mt-1.5">Redelegate From</p></>
+          ): (
+            <>
+            <input className="h-4 w-4 rounded border-gray-300" 
+            type="checkbox" id="Row1" 
+            onChange={(e) => {
+              setCheckedDelegationsTo(prev => ({
+                ...prev,
+                [validator.operator_address]: e.target.checked ? index : null
+              }));
+            }}
+            />
+            <p className="block text-xs mt-1.5">Redelegate To</p>
+              </>
+          )
+          } 
+            </Table.Cell>
+          </Table.Row>
+        );
+      })}
+    </Table.Body>
+  </Table>
     { isDisconnected ? (
       <h1 className="my-8 font-bold text-3xl">Connect to Evmos Testnet</h1>
     ) : (
