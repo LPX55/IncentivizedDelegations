@@ -2,7 +2,8 @@
 
 Incentivizing Redelegations for Greater Network Decentralization and Security
 
-**Deployment (9000)** - `0x9A8c92273dC58f7F6Ebb20Aadac94D1bCd5784b4`
+- **Deployment (9000)** - `0x9A8c92273dC58f7F6Ebb20Aadac94D1bCd5784b4`
+- **Round two initiation** - [transaction](https://testnet.escan.live/tx/0xf269e890ecdba5b34dd4ff8dd862fd61c990cbf0a5495732c7cc24bc990ee0cc)
 
 ## Project Summary
 
