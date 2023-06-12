@@ -72,3 +72,4 @@ yarn.lock
 
 templates/evm/core/pages/api
 .DS_Store
+.vscode/settings.json

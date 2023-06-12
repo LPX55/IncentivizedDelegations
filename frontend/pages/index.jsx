@@ -6,7 +6,7 @@ export default function Home() {
   const { address, connector, isConnected } = useAccount()
 
   return (
-    <div className="max-w-4xl">
+    <div className="max-w-6xl">
       <main className={styles.main}>
         <ValidatorsTable />
       </main>

@@ -12,6 +12,8 @@
 		"@evmos/address-converter": "^0.1.9",
 		"@rainbow-me/rainbowkit": "^0.12.4",
 		"alchemy-sdk": "^2.6.2",
+		"flowbite": "^1.6.5",
+		"flowbite-react": "^0.4.7",
 		"next": "13.1.2",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
