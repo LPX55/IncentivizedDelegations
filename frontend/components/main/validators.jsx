@@ -3,7 +3,7 @@ import { useAccount, useContractReads, useContractWrite  } from "wagmi";
 import { ethToEvmos } from "@evmos/address-converter";
 import { HeaderStats } from "./stats";
 import { toast } from "react-toastify";
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 
 import Router, { useRouter } from "next/router";
 
@@ -26,8 +26,8 @@ const ValidatorsTable = () => {
   const [evmosAccount, setEvmosAccount] = useState('');
   const [delegations, setDelegations] = useState({});
   const [redelegations, setRedelegations] = useState({});
-
   const [checkedDelegations, setCheckedDelegations] = useState({});
+  const [totalRedelegations, setTotalRedelegations] = useState(0);
   const [checkedDelegationsTo, setCheckedDelegationsTo] = useState({});
   const [isApproved, setIsApproved] = useState(false);
   const { data, isError, isLoading } = useContractReads({
@@ -126,40 +126,56 @@ const ValidatorsTable = () => {
    <HeaderStats />
   </div>
 
-    <Table className="table-auto min-w-xl w-full rounded-xl relative border-zinc-800">
-    <Table.Head className="sticky inset-y-0 start-0 bg-black">
-        <Table.HeadCell className="px-2 py-2">#</Table.HeadCell>
-        <Table.HeadCell className="px-3 py-2 text-left">Validator</Table.HeadCell>
-        <Table.HeadCell className="px-2 py-2">Voting Power</Table.HeadCell>
-        <Table.HeadCell className="px-3 py-2 text-left">Delegation</Table.HeadCell>
-        <Table.HeadCell>U</Table.HeadCell>
-        <Table.HeadCell className="px-2 py-2">🔁</Table.HeadCell>
+    <Table hoverable className="min-w-[72rem] dark w-full rounded-xl relative border-zinc-500">
+    <Table.Head className=" border-zinc-500">
+        <Table.HeadCell className="py-2 text-center w-[40px]">#</Table.HeadCell>
+        <Table.HeadCell className="border-x border-zinc-600 text-left max-w-[8rem]">Validator</Table.HeadCell>
+        <Table.HeadCell className="border-x border-zinc-600">Voting<br />Power</Table.HeadCell>
+        <Table.HeadCell className="border-x max-w-30 border-zinc-600 px-2 py-2 text-left">Current<br />Delegation</Table.HeadCell>
+        <Table.HeadCell className="border-x w-[20rem] border-zinc-600">After<br />Redelegation</Table.HeadCell>
+        <Table.HeadCell className="px-2 py-2 text-center">🔁</Table.HeadCell>
     </Table.Head>
-    <Table.Body className="rounded-xl divide-y">
+    <Table.Body className="rounded-lg divide-y">
       {validators.map((validator, index) => {
         const percentage = ((parseFloat(validator.delegator_shares) / totalShares) * 100).toFixed(2);
         const delegatedAmount = delegations[validator.operator_address] ? delegations[validator.operator_address].toString() * (10 ** -18) : '0';
+        const redelegationProgress = redelegations[validator.operator_address] ? true : false;
+        const redelegationTime = redelegationProgress ? redelegations[validator.operator_address][0].redelegation_entry.completion_time : '';
+        const numItems = Object.keys(checkedDelegationsTo).length;
+
 
         return (
-          <Table.Row key={index} rank={index} addr={validator.operator_address} className="border border-zinc-800 bg-gray-800">
-            <Table.Cell className={`py-4 text-center text-gray-900 ${getRowColor(index, validators.length)} whitespace-nowrap font-medium text-white`}>
+          <Table.Row key={index} rank={index} addr={validator.operator_address} className="border-zinc-600 bg-gray-800">
+            <Table.Cell className={`text-center w-[40px] ${getRowColor(index, validators.length)} whitespace-nowrap font-medium text-xs text-gray-800`}>
               {index + 1}
             </Table.Cell>
 
-            <Table.Cell className="px-4 py-4 whitespace-nowrap font-medium text-white">{validator.description.moniker}</Table.Cell>
-            <Table.Cell className="text-center px-2 py-4 whitespace-nowrap font-medium text-white">{percentage}%</Table.Cell>
-            <Table.Cell className={`px-4 py-4 whitespace-nowrap font-medium text-white`}>
-              <span className={`${checkedDelegations[validator.operator_address] ? 'line-through' : ''}`}>
-                {Number(delegatedAmount).toFixed(2)}
+            <Table.Cell className="py-2 max-w-[8rem] whitespace-nowrap overflow-clip text-ellipsis	font-medium text-white">{validator.description.moniker}</Table.Cell>
+            <Table.Cell className="font-medium text-white">{percentage}%</Table.Cell>
+            <Table.Cell className={`max-w-30 whitespace-nowrap font-medium text-white`}>
+              <span className={`${checkedDelegations[validator.operator_address] ? 'line-through' : ''} inline text-xs`}>
+                {Number(delegatedAmount).toFixed(2)} tEVMOS
               </span>
-              {checkedDelegations[validator.operator_address] && ' ➡ 0'}
+              {redelegationProgress ? (
+              
+              <span className="inline-flex ml-1">
+              <Tooltip content={`Redelegation in progress. You may redelegate additional tokens TO this validator but cannot redelegate FROM this validator until ${redelegationTime}`} className="inline max-w-[28rem] whitespace-normal"> ⌛</Tooltip>
+              </span>
+              
+            ) : (
+              <></>
+            )}
             </Table.Cell>
-            <Table.Cell className="px-2 py-4 self-center text-center">U</Table.Cell>
+            <Table.Cell className="font-medium text-white text-xs">
+            {checkedDelegations[validator.operator_address] && '0'}
+            {checkedDelegationsTo[validator.operator_address] && ((totalRedelegations / numItems).toFixed(2) + ' tEVMOS')}
             
-            <Table.Cell className="px-2 py-4 self-center text-center whitespace-nowrap font-medium text-white">
-            {delegations[validator.operator_address] && delegations[validator.operator_address] > 0 ? (
+            </Table.Cell>
+            
+            <Table.Cell className="self-center text-center whitespace-nowrap font-medium text-white">
+            {delegations[validator.operator_address] && delegations[validator.operator_address] > 0 && !redelegationProgress ? (
                 <>
-            <input type="checkbox" className="scale-x-[-1] appearance-none w-7 focus:outline-none before:checked:bg-red-500 h-4 bg-gray-200 rounded-full before:inline-block before:rounded-full before:bg-green-500 before:h-3 before:w-3 before:-translate-y-[3px] checked:before:translate-x-full shadow-inner transition-all duration-300 before:ml-0.5" 
+            <input type="checkbox" className="h-4 w-4 rounded border-gray-300" 
             checked={!!checkedDelegations[validator.operator_address]}
             
             onChange={(e) => {
@@ -167,10 +183,14 @@ const ValidatorsTable = () => {
                 ...prev,
                 [validator.operator_address]: e.target.checked ? delegations[validator.operator_address] : null
               }));
+              setTotalRedelegations(totalRedelegations + delegatedAmount);
             }} />
-            <p className="block text-xs mt-1.5">Redelegate From</p></>
+            <span className="text-xs inline ml-1.5">⬅ REDELEGATE FROM</span>
+
+            </>
           ): (
             <>
+            <span className="text-xs inline mr-1.5">REDELEGATE TO ➡</span>
             <input className="h-4 w-4 rounded border-gray-300" 
             type="checkbox" id="Row1" 
             onChange={(e) => {
@@ -180,7 +200,6 @@ const ValidatorsTable = () => {
               }));
             }}
             />
-            <p className="block text-xs mt-1.5">Redelegate To</p>
               </>
           )
           } 
