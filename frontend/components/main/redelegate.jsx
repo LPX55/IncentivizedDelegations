@@ -27,8 +27,16 @@ function RedelegateComponent({srcValidatorAddrs, dstValidatorAddrs, amounts}) {
 
 
             try {
-                const tx = await contract.redelegateTokensMultiple(srcValidatorAddrs, dstValidatorAddrs, amounts);
+                console.log(srcValidatorAddrs)
+                console.log(dstValidatorAddrs)
+                console.log(amounts)
+
+                const tx = await contract.redelegateTokensMultiple(srcValidatorAddrs, dstValidatorAddrs, amounts, {
+                    gasLimit: 5000000,
+                });
                 setTransaction(tx);
+                console.log(transaction)
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -69,7 +77,7 @@ function RedelegateComponent({srcValidatorAddrs, dstValidatorAddrs, amounts}) {
             {error && (
                 <div>
                     <h2>Error:</h2>
-                    <p>{error}</p>
+                    <p className="overflow-scroll">{error}</p>
                 </div>
             )}</h1>
                     </div>
