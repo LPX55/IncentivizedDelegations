@@ -8,10 +8,9 @@ import {
 	evmosTestnet
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
-
-
 import MainLayout from "../layout/mainLayout";
 import { useRouter } from "next/router";
+const projectId = '24d163cf3603ea0ce19db075a778e635';
 
 const { chains, provider } = configureChains(
 	[
@@ -22,6 +21,7 @@ const { chains, provider } = configureChains(
 
 const { connectors } = getDefaultWallets({
 	appName: "Evmos Redelegation Rewards",
+	projectId,
 	chains,
 });
 
